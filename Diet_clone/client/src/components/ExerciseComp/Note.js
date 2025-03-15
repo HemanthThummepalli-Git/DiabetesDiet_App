@@ -77,5 +77,4 @@ function Note({ edit, setEdit }) {
     </Box>
   );
 }
-
 export default Note;
