@@ -14,7 +14,7 @@ passport.use(
     },
     async function (accessToken, refreshToken, profile, cb) {
       console.log(profile.id);
-      let user = await User.find({ facebookId: profile.id });
+      let user = await User.findOne({ facebookId: profile.id });
       if (!user) {
         User.create({ facebookId: profile.id }, function (err, user) {
           return cb(err, user);

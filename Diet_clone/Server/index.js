@@ -1,4 +1,4 @@
-const User = require("./Model/User");
+conster = require("./Model/User");
 require("dotenv").config();
 const express = require("express");
 const app = express();
@@ -9,7 +9,8 @@ const exerciseRouter=require("./Routes/exercise.route")
 const exerciseDairyRouter=require("./Routes/exerciseDairy.route")
 const facebookOauth = require("./Routes/facebookOauth.route")
 const loginRouter = require("./Routes/login.route");
-
+const path = require("path");
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 const foodRoute = require("./Routes/searchAdd.route")
 const cors = require("cors");

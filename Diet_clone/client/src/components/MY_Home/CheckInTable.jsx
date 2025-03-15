@@ -1,48 +1,53 @@
 import React from "react";
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer,
-    Input,
-  } from '@chakra-ui/react'
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Input,
+  Box,
+} from "@chakra-ui/react";
 
 const CheckInTable = () => {
   return (
-    <div>
-      <TableContainer maxWidth={"100%"} mt={7}>
-        <Table variant="simple">
-          <Thead color={"white"} bgColor={"#035184"}>
-            <Tr >
-              <Th color={"white"} >Other Measurements</Th>
-              <Th color={"white"} >Last Entry</Th>
-              <Th color={"white"}  isNumeric>Today's Entry</Th>
+    <Box mt={6} boxShadow="md" borderRadius="lg" overflow="hidden">
+      <TableContainer>
+        <Table variant="striped" colorScheme="gray">
+          {/* Header */}
+          <Thead bgGradient="linear(to-r, blue.700, blue.500)">
+            <Tr>
+              <Th color="white" fontSize="md">📏 Other Measurements</Th>
+              <Th color="white" fontSize="md">📅 Last Entry</Th>
+              <Th color="white" fontSize="md" isNumeric>✍️ Today's Entry</Th>
             </Tr>
           </Thead>
-          <Tbody bg={"#f6f6f6"}>
-            <Tr>
-              <Td>Neck</Td>
-              <Td>None</Td>
-              <Td isNumeric><Input bg={"white"} type={"number"} size="xs" w={"50px"} /></Td>
-            </Tr>
-            <Tr>
-              <Td>Waist</Td>
-              <Td>None</Td>
-              <Td isNumeric><Input bg={"white"} type={"number"} size="xs" w={"50px"} /></Td>
-            </Tr>
-            <Tr>
-              <Td>Hips</Td>
-              <Td>None</Td>
-              <Td isNumeric><Input bg={"white"} type={"number"} size="xs" w={"50px"} /></Td>
-            </Tr>
+
+          {/* Table Body */}
+          <Tbody>
+            {["Neck", "Waist", "Hips"].map((measurement, index) => (
+              <Tr key={index}>
+                <Td fontWeight="medium">{measurement}</Td>
+                <Td color="gray.500" fontStyle="italic">None</Td>
+                <Td isNumeric>
+                  <Input
+                    type="number"
+                    size="sm"
+                    w="70px"
+                    borderColor="gray.400"
+                    bg="white"
+                    _hover={{ borderColor: "blue.400" }}
+                    _focus={{ borderColor: "blue.600", boxShadow: "md" }}
+                  />
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
-          
         </Table>
       </TableContainer>
-    </div>
+    </Box>
   );
 };
 

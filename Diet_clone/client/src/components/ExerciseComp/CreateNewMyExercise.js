@@ -2,17 +2,19 @@ import {
   Box,
   Button,
   Flex,
-  HStack,
+  VStack,
   Input,
   Select,
   Text,
   useToast,
+  Divider,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getExerciseDairy, postExercise, postExerciseDairy } from "../../api";
 import { ExerciseContext } from "../../Context/ExerciseContext";
-const exdata = {
+
+const initialExerciseData = {
   name: "",
   type: "",
   min: "",
@@ -21,29 +23,27 @@ const exdata = {
   reps: "",
   wtsets: "",
 };
-let perEx = JSON.parse(localStorage.getItem("PersonalExercise")) || [];
+
+const storedExercises = JSON.parse(localStorage.getItem("PersonalExercise")) || [];
+
 function CreateNewMyExercise() {
-  const [flag, setflag] = useState(false);
-  const [data, setdata] = useState(exdata);
-  const [findata, setfin] = useState(perEx);
+  const [data, setData] = useState(initialExerciseData);
   const [type, setType] = useState(data.type);
   const toast = useToast();
   const navigate = useNavigate();
-  // change inputs according to type
+
   useEffect(() => {
     setType(data.type);
   }, [data.type]);
-  console.log(type, "type");
 
-  // use context
-  const { Exercisedata, setExercisedata } = useContext(ExerciseContext);
+  const { setExercisedata } = useContext(ExerciseContext);
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setdata({
-      ...data,
+    setData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   }
 
   const postExerciseHandler = async () => {
@@ -57,198 +57,144 @@ function CreateNewMyExercise() {
     let exd = await postExerciseDairy(obj);
     let response = await getExerciseDairy(exd.data.message.date);
     setExercisedata(response.data.message[0]);
+
     toast({
-      title: "Welcome to Myfitnesspal",
-      description: "Exercise Added",
+      title: "Exercise Added!",
+      description: "Your exercise has been successfully added to MyFitnessPal.",
       status: "success",
       duration: 2000,
       position: "top",
       isClosable: true,
     });
+
     navigate("/exercise");
   };
-  useEffect(() => {
-    localStorage.setItem("PersonalExercise", JSON.stringify([...findata]));
-    setdata(exdata);
-  }, [flag]);
 
   return (
-    <Flex flexDir={"column"} width={"57%"} m="3rem auto ">
-      <Text
-        textAlign={"start"}
-        fontSize="1.3rem "
-        fontWeight="bold"
-        color="#00548f"
-      >
-        Your Personal Exercises
+    <Flex flexDir="column" width="50%" m="3rem auto" p="2rem" borderRadius="10px" bg="white" boxShadow="lg">
+      {/* Header */}
+      <Text fontSize="1.5rem" fontWeight="bold" color="#00548f" mb="1rem">
+        Add a New Exercise
       </Text>
-      <hr />
-      <HStack bg="#f6f6f6" justifyContent={"space-between"} p="1.5rem">
-        <Box
-          fontSize={"13px"}
-          fontWeight="semibold"
-          textAlign="start"
-          mb={"5rem"}
-        >
-          <Box mb={"0.5rem"}>
-            <Text>Exercise Description: </Text>
-            <Input
-              placeholder="(e.g abdominal abs)"
-              onChange={(e) => handleChange(e)}
-              name="name"
-              focusBorderColor="none"
-              type="text"
-              w="170px"
-              h="26px"
-              borderRadius="none"
-              boxShadow="rgb(35, 49, 47) 1px 1px 1.5px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
-              background="white"
-            />
-          </Box>
-          {/* type */}
-          <Box mb={"0.5rem"}>
-            <Text>Exercise type:</Text>
-            <Select
-              onChange={(e) => handleChange(e)}
-              name="type"
-              fontSize={"13px"}
-              h="26px"
-              bg="white"
-              boxShadow="rgb(35, 49, 47) 1px 1px 1.5px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
-              borderRadius="2px"
-              placeholder="Select option"
-            >
-              <option value="Cardiovascular">Cardiovascular</option>
-              <option value="strength">strength type</option>
-            </Select>
-          </Box>
-          {/* Long */}
+      <Divider mb="1rem" />
 
-          {type == "Cardiovascular" || type == "" ? (
-            <>
-              <Box mb={"0.5rem"}>
-                <Text>How long?:</Text>
-                <Input
-                  required
-                  onChange={(e) => handleChange(e)}
-                  name="min"
-                  mr="0.5rem"
-                  focusBorderColor="none"
-                  type="text"
-                  w="60px"
-                  h="23px"
-                  borderRadius="none"
-                  boxShadow="rgb(35, 49, 47) 1px 1px 1.5px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
-                  background="white"
-                />
-                Minutes
-              </Box>
-              {/* calories burned */}
-              <Box mb="1.5rem">
-                <Text>Calories Burned:</Text>
-                <Input
-                  onChange={(e) => handleChange(e)}
-                  name="calories"
-                  focusBorderColor="none"
-                  type="text"
-                  w="60px"
-                  h="23px"
-                  borderRadius="none"
-                  boxShadow="rgb(35, 49, 47) 1px 1px 1.5px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
-                  background="white"
-                />
-              </Box>
-            </>
-          ) : (
-            <>
-              {/* for strength training */}
-              <Box mb={"0.5rem"}>
-                <Text>sets:</Text>
-                <Input
-                  onChange={(e) => handleChange(e)}
-                  name="sets"
-                  mr="0.5rem"
-                  focusBorderColor="none"
-                  type="text"
-                  w="60px"
-                  h="23px"
-                  borderRadius="none"
-                  boxShadow="rgb(35, 49, 47) 1px 1px 1.5px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
-                  background="white"
-                />
-              </Box>
-              {/* calories burned */}
-              <Box mb="1rem">
-                <Text>Repetitions/Set:</Text>
-                <Input
-                  onChange={(e) => handleChange(e)}
-                  name="reps"
-                  focusBorderColor="none"
-                  type="text"
-                  w="60px"
-                  h="23px"
-                  borderRadius="none"
-                  boxShadow="rgb(35, 49, 47) 1px 1px 1.5px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
-                  background="white"
-                />
-              </Box>
-              <Box mb={"0.5rem"}>
-                <Text>Weight/Set:</Text>
-                <Input
-                  onChange={(e) => handleChange(e)}
-                  name="wtsets"
-                  mr="0.5rem"
-                  focusBorderColor="none"
-                  type="text"
-                  w="60px"
-                  h="23px"
-                  borderRadius="none"
-                  boxShadow="rgb(35, 49, 47) 1px 1px 1.5px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
-                  background="white"
-                />
-              </Box>
-            </>
-          )}
+      {/* Form Inputs */}
+      <VStack spacing="1rem" align="start">
+        <Box w="100%">
+          <Text fontWeight="medium">Exercise Description:</Text>
+          <Input
+            placeholder="e.g. abdominal abs"
+            onChange={handleChange}
+            name="name"
+            variant="filled"
+            _focus={{ bg: "white", borderColor: "blue.400" }}
+          />
+        </Box>
 
-          <Box>
-            <Link to="/exercise/create-exercise">
-              <Button
-                colorScheme="green"
-                className="reportBtn"
-                h="35px"
-                padding={"0 1.5rem"}
-                onClick={postExerciseHandler}
-              >
-                Add
-              </Button>
-            </Link>
-          </Box>
+        <Box w="100%">
+          <Text fontWeight="medium">Exercise Type:</Text>
+          <Select
+            onChange={handleChange}
+            name="type"
+            placeholder="Select type"
+            variant="filled"
+            _focus={{ bg: "white", borderColor: "blue.400" }}
+          >
+            <option value="Cardiovascular">Cardiovascular</option>
+            <option value="Strength">Strength Training</option>
+          </Select>
         </Box>
-        <Box w="50%" pb="5rem">
-          <Text color="#00548f" fontWeight={"bold"}>
-            Creating a New Exercise
-          </Text>
-          <Box fontSize={"13px"} p="0 1.5rem 0  0" color="blackAlpha.900">
-            <Text>
-              If you can't find an exercise in our database, you can easily add
-              it yourself.
-            </Text>
-            <br />
-            <Text>
-              For cardio exercises, if you do not know how many calories you
-              burned, instead of creating a new exercise, it's better to enter
-              an existing exercise in our database that is close to the one you
-              performed. This will at least provide you with a rough estimate of
-              how many calories you burned.
-            </Text>
-            <br />
-            <Text>
-              Once you've created an exercise, you will be able to search for it
-              and add it to your exercise log at any time
-            </Text>
-          </Box>
-        </Box>
-      </HStack>
+
+        {type === "Cardiovascular" || type === "" ? (
+          <>
+            <Box w="100%">
+              <Text fontWeight="medium">Duration (minutes):</Text>
+              <Input
+                onChange={handleChange}
+                name="min"
+                type="number"
+                placeholder="Enter minutes"
+                variant="filled"
+                _focus={{ bg: "white", borderColor: "blue.400" }}
+              />
+            </Box>
+
+            <Box w="100%">
+              <Text fontWeight="medium">Calories Burned:</Text>
+              <Input
+                onChange={handleChange}
+                name="calories"
+                type="number"
+                placeholder="Enter calories"
+                variant="filled"
+                _focus={{ bg: "white", borderColor: "blue.400" }}
+              />
+            </Box>
+          </>
+        ) : (
+          <>
+            <Box w="100%">
+              <Text fontWeight="medium">Sets:</Text>
+              <Input
+                onChange={handleChange}
+                name="sets"
+                type="number"
+                placeholder="Enter sets"
+                variant="filled"
+                _focus={{ bg: "white", borderColor: "blue.400" }}
+              />
+            </Box>
+
+            <Box w="100%">
+              <Text fontWeight="medium">Reps per Set:</Text>
+              <Input
+                onChange={handleChange}
+                name="reps"
+                type="number"
+                placeholder="Enter reps"
+                variant="filled"
+                _focus={{ bg: "white", borderColor: "blue.400" }}
+              />
+            </Box>
+
+            <Box w="100%">
+              <Text fontWeight="medium">Weight per Set (kg):</Text>
+              <Input
+                onChange={handleChange}
+                name="wtsets"
+                type="number"
+                placeholder="Enter weight"
+                variant="filled"
+                _focus={{ bg: "white", borderColor: "blue.400" }}
+              />
+            </Box>
+          </>
+        )}
+      </VStack>
+
+      {/* Submit Button */}
+      <Button
+        colorScheme="blue"
+        mt="1.5rem"
+        w="100%"
+        h="45px"
+        fontSize="1rem"
+        onClick={postExerciseHandler}
+        transition="0.3s"
+        _hover={{ bg: "blue.600" }}
+      >
+        Add Exercise
+      </Button>
+
+      {/* Info Box */}
+      <Box mt="2rem" bg="gray.100" p="1rem" borderRadius="8px">
+        <Text fontWeight="bold" color="blue.600">💡 Creating a New Exercise</Text>
+        <Text fontSize="0.9rem" mt="0.5rem">
+          If you can't find an exercise in our database, you can add it manually.
+          For cardio exercises, if you're unsure about calories burned, try selecting a similar
+          exercise from our database for a rough estimate.
+        </Text>
+      </Box>
     </Flex>
   );
 }

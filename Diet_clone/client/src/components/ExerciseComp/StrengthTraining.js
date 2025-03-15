@@ -1,75 +1,71 @@
-import React from 'react'
+import React from "react";
 import {
-    Box,
-    Flex,
-    Text,
-    Table,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    TableContainer,
-    Thead,
-    Tbody,
-  } from "@chakra-ui/react";
-  import { AiFillStop } from "react-icons/ai";
+  Box,
+  Flex,
+  Text,
+  Table,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  Thead,
+  Tbody,
+} from "@chakra-ui/react";
+import { AiFillStop } from "react-icons/ai";
 
 function StrengthTraining() {
   return (
-    <Box gap='1' >
-        <TableContainer>
-    <Table>
-      <TableCaption textAlign='start' borderBottom='1px solid lightgrey' >
-        <Flex    >
-       <Text  fontWeight='bold'   fontSize='15px'  color= '#0072BF'> Add Text </Text>
-       <Text fontSize='13px'  color= '#0072BF' m="0 0.5rem"> | </Text>
-       <Text fontSize='15px' fontWeight='bold' color= '#0072BF'>Quick Tools</Text>
-        </Flex>
-      </TableCaption>
-      <Thead>
-        <Tr  borderBottom="1px solid #e6e6e6">
-          <Th w="70%" fontSize='18px' fontWeight="bold" textTransform='capitalize'
-          color='#00548F' 
-          borderRight='2px solid white'
-          >Strength Training</Th>
-          <Th background="#00548F" color="#ffffff" 
-          borderRight='2px solid white'
-          >Sets</Th>
-          <Th background="#00548F" color="#ffffff" 
-          borderRight='2px solid white'
-          isNumeric>
-           Reps/Sets
-          </Th>
-          <Th background="#00548F" color="#ffffff"
-          borderRight='2px solid white'
-          isNumeric>
-            Weight/Sets
-          </Th>
-          <Th></Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        <Tr borderBottom="1px solid #e6e6e6"
-         backgroundColor="#f6f6f6"
-      
-          color="black">
-          <Td borderRight='2px solid white'>push ups</Td>
-          <Td borderRight='2px solid white'> 10</Td>
-          <Td borderRight='2px solid white' isNumeric>25.4</Td>
-          <Td borderRight='2px solid white' isNumeric>25.4</Td>
+    <Box p={4} borderRadius="md" boxShadow="md" bg="white">
+      <TableContainer borderRadius="md" overflow="hidden">
+        <Table variant="simple">
+          {/* Table Caption with Quick Tools */}
+          <TableCaption textAlign="start" borderBottom="1px solid lightgrey">
+            <Flex>
+              <Text fontWeight="bold" fontSize="15px" color="#0072BF" cursor="pointer" _hover={{ textDecoration: "underline" }}>
+                Add Task
+              </Text>
+              <Text fontSize="13px" color="#0072BF" mx="0.5rem">|</Text>
+              <Text fontSize="15px" fontWeight="bold" color="#0072BF" cursor="pointer" _hover={{ textDecoration: "underline" }}>
+                Quick Tools
+              </Text>
+            </Flex>
+          </TableCaption>
 
-          <Td>
-          <Text fontWeight='extrabold' color="red" borderRadius="50%">
-              <AiFillStop />
-            </Text>
-          </Td>
-        </Tr>
-      
-      </Tbody>
-    </Table>
-  </TableContainer>
+          {/* Table Head */}
+          <Thead>
+            <Tr bgGradient="linear(to-r, #00548F, #0074B7)">
+              <Th w="70%" fontSize="18px" fontWeight="bold" color="white" borderRight="2px solid white">
+                Strength Training
+              </Th>
+              <Th color="white" borderRight="2px solid white">Sets</Th>
+              <Th color="white" borderRight="2px solid white" isNumeric>Reps/Sets</Th>
+              <Th color="white" borderRight="2px solid white" isNumeric>Weight/Sets</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+
+          {/* Table Body */}
+          <Tbody>
+            <Tr
+              bg="gray.100"
+              _hover={{ bg: "gray.200", transition: "0.2s" }}
+            >
+              <Td borderRight="2px solid white">Push Ups</Td>
+              <Td borderRight="2px solid white" textAlign="center">10</Td>
+              <Td borderRight="2px solid white" textAlign="center" isNumeric>25</Td>
+              <Td borderRight="2px solid white" textAlign="center" isNumeric>25</Td>
+              <Td textAlign="center">
+                <Text color="red.500" fontSize="1.5rem" _hover={{ transform: "scale(1.2)", transition: "0.2s" }}>
+                  <AiFillStop />
+                </Text>
+              </Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Box>
-  )
+  );
 }
 
-export default StrengthTraining
+export default StrengthTraining;

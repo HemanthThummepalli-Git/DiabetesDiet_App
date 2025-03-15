@@ -4,48 +4,73 @@ import { BsFillPencilFill } from "react-icons/bs";
 
 function Note({ edit, setEdit }) {
   const [note, setNote] = useState("");
+
   return (
-    <Box p="1.5rem 0" borderBottom="1px solid lightgrey">
-      <Flex justifyContent="space-between" m="0.5rem 0" padding="0 1rem">
-        <Box
-          fontSize="18px"
+    <Box
+      p="1.5rem 0"
+      borderBottom="1px solid lightgrey"
+      borderRadius="10px"
+      bg="white"
+      boxShadow="md"
+      transition="0.3s ease-in-out"
+      mt="1rem"
+    >
+      {/* Header */}
+      <Flex justifyContent="space-between" alignItems="center" px="1.5rem">
+        <Text
+          fontSize="20px"
           fontWeight="bold"
           textTransform="capitalize"
           color="#00548F"
         >
           Today's Exercise Notes
-        </Box>
+        </Text>
+
+        {/* Edit/Save Button */}
         <Flex
-          color="blue"
-          gap="1rem"
+          color="#0074B7"
+          gap="0.5rem"
+          fontWeight="bold"
+          cursor="pointer"
+          alignItems="center"
           textDecoration="underline"
-          onClick={() => {
-            setEdit(!edit);
-          }}
+          _hover={{ transform: "scale(1.05)", transition: "0.2s ease-in-out" }}
+          onClick={() => setEdit(!edit)}
         >
-          {!edit ? "Edit" : "Save"} note <BsFillPencilFill />
+          <Text>{!edit ? "Edit" : "Save"} Note</Text>
+          <BsFillPencilFill />
         </Flex>
       </Flex>
-      <Box>
+
+      {/* Note Content */}
+      <Box mt="1rem" px="1.5rem">
         {edit ? (
           <Textarea
-            placeholder="Here is a sample placeholder"
-            h="100px"
+            placeholder="Write your notes here..."
+            h="120px"
+            fontSize="16px"
+            border="1px solid #0074B7"
+            borderRadius="8px"
+            _focus={{ borderColor: "#00548F", boxShadow: "lg" }}
             onChange={(e) => setNote(e.target.value)}
+            value={note}
           />
         ) : (
           <Flex
-            border="1px solid black"
-            background="#f6f6f6"
-            borderRadius="0.5rem"
-            padding="1rem"
-            h="100px"
+            bg="#F6F9FC"
+            borderRadius="8px"
+            p="1.2rem"
+            h="120px"
             justifyContent="center"
             alignItems="center"
+            boxShadow="md"
+            border="1px solid #E0E0E0"
           >
-            <Text fontWeight="extrabold">"</Text>
-            <Text fontWeight="semibold">{note ? note : "add Todays Note"}</Text>
-            <Text fontWeight="extrabold">"</Text>
+            <Text fontWeight="extrabold" fontSize="20px">“</Text>
+            <Text fontWeight="medium" fontSize="18px" color="#444">
+              {note ? note : "Add today's note..."}
+            </Text>
+            <Text fontWeight="extrabold" fontSize="20px">”</Text>
           </Flex>
         )}
       </Box>

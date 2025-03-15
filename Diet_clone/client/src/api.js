@@ -8,7 +8,7 @@ function getRefreshToken() {
   return refreshToken;
 }
 const instance = axios.create({
-  baseURL: "https://fierce-hen-pajamas.cyclic.app",
+  baseURL: "http://localhost:5000/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -59,7 +59,7 @@ export function signupUser(user) {
 }
 export async function login(user) {
   let data = await axios.post(
-    "https://fierce-hen-pajamas.cyclic.app/login",
+    "http://localhost:5000/login",
     user
   );
   console.log(data);
@@ -67,14 +67,14 @@ export async function login(user) {
 
 export const searchAllFood = async () => {
   const list = await axios.get(
-    "https://fierce-hen-pajamas.cyclic.app/simplefood/searchall"
+    "http://localhost:5000/simplefood/searchall"
   );
   return list;
 };
 
 export const searchByName = async (name) => {
   const list = await axios.post(
-    "https://fierce-hen-pajamas.cyclic.app/simplefood/searchallbyname",
+    "http://localhost:5000/simplefood/searchallbyname",
     { name: name }
   );
   return list;
@@ -82,7 +82,7 @@ export const searchByName = async (name) => {
 
 export const addFoodByName = async (data) => {
   const res = await axios.post(
-    "https://fierce-hen-pajamas.cyclic.app/simplefood/addfoodtouser",
+    "http://localhost:5000/simplefood/addfoodtouser",
     data
   );
   return res.data;
@@ -90,7 +90,7 @@ export const addFoodByName = async (data) => {
 
 export const searchAllFoodDiary = async (data) => {
   const res = await axios.post(
-    "https://fierce-hen-pajamas.cyclic.app/simplefood/searchfood_dairy",
+    "http://localhost:5000/simplefood/searchfood_dairy",
     data
   );
   return res;

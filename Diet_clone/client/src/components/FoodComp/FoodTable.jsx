@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Table,
   Thead,
@@ -7,40 +7,70 @@ import {
   Th,
   Td,
   TableContainer,
+  Box,
 } from "@chakra-ui/react";
 
 const FoodTable = ({ data }) => {
   return (
-    <div>
-      <TableContainer mt={5} mb={10}>
-        <Table variant="simple">
+    <Box p={2}>
+      <TableContainer>
+        <Table variant="simple" size="md">
+          {/* Header */}
           <Thead>
-            <Tr bgColor={"blue"}>
-              <Th color={"white"}>Eating Time</Th>
-              <Th color={"white"}>Calories</Th>
-              <Th color={"white"}>Carbs</Th>
-              <Th color={"white"}>Fat</Th>
-              <Th color={"white"}>Protein</Th>
-              <Th color={"white"}>Sodium</Th>
-              <Th color={"white"}>Sugar</Th>
+            <Tr bg="blue.600">
+              {["Eating Time", "Calories", "Carbs", "Fat", "Protein", "Sodium", "Sugar"].map((heading, index) => (
+                <Th 
+                  key={index} 
+                  color="white" 
+                  fontSize="16px" 
+                  textAlign="center" 
+                  py={3}
+                  fontWeight="bold"
+                >
+                  {heading}
+                </Th>
+              ))}
             </Tr>
           </Thead>
+
+          {/* Body */}
           <Tbody>
-            {data?.map((el) => (
-              <Tr key={el._id}>
-                <Td>{el.time}</Td>
-                <Td>{el.foodID.Calories}</Td>
-                <Td>{el.foodID.TotalCarbs}</Td>
-                <Td>{el.foodID.TotalFat}</Td>
-                <Td>{el.foodID.Protein}</Td>
-                <Td>{el.foodID.Sodium}</Td>
-                <Td>{el.foodID.Sugar}</Td>
+            {data?.length > 0 ? (
+              data.map((el, i) => (
+                <Tr
+                  key={el._id}
+                  bg={i % 2 === 0 ? "gray.50" : "white"} // Alternating row colors
+                  _hover={{
+                    bg: "blue.50",
+                    transition: "0.2s ease-in-out",
+                  }}
+                >
+                  <Td textAlign="center" fontWeight="bold" color="gray.700">
+                    {el.time || "N/A"}
+                  </Td>
+                  <Td textAlign="center">{el.foodID?.Calories || "N/A"} kcal</Td>
+                  <Td textAlign="center">{el.foodID?.TotalCarbs || "N/A"} </Td>
+                  <Td textAlign="center">{el.foodID?.TotalFat || "N/A"} </Td>
+                  <Td textAlign="center">
+                    {el.foodID?.Protein || "N/A"} 
+                  </Td>
+                  <Td textAlign="center">{el.foodID?.Sodium || "N/A"} </Td>
+                  <Td textAlign="center" fontWeight="bold" color="red.500">
+                    {el.foodID?.Sugar || "N/A"} 
+                  </Td>
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={7} textAlign="center" fontWeight="bold" color="gray.500" py={5}>
+                  No food entries found
+                </Td>
               </Tr>
-            ))}
+            )}
           </Tbody>
         </Table>
       </TableContainer>
-    </div>
+    </Box>
   );
 };
 

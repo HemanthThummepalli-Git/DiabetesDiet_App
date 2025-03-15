@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 import {
   Box,
   Flex,
-  Input,
   Text,
   Table,
   Tr,
@@ -19,98 +18,105 @@ import { Link } from "react-router-dom";
 import { ExerciseContext } from "../../Context/ExerciseContext";
 import { DeleteExercise, getExerciseDairy } from "../../api";
 
+function CardioVasular({ currdate, setcurrdate }) {
+  const { Exercisedata, setExercisedata } = useContext(ExerciseContext);
 
-function CardioVasular({currdate,setcurrdate}) {
-  const {Exercisedata,setExercisedata}=useContext(ExerciseContext)
+  async function handleGetExercise() {
+    let response = await getExerciseDairy(currdate);
+    setExercisedata(response.data.message[0]);
+  }
 
- async function handleGetExercise(){
-  let response=await getExerciseDairy(currdate);
-  setExercisedata(response.data.message[0])
+  async function handleDelete(id, date) {
+    await DeleteExercise(id, date);
+    handleGetExercise();
   }
- async function handleDelete(id,date){
-    let resp= await DeleteExercise(id,date)
-    handleGetExercise()
-  }
-  useEffect(()=>{
-    handleGetExercise()
-  },[])
+
+  useEffect(() => {
+    handleGetExercise();
+  }, []);
 
   return (
-    <Box>
-      <TableContainer>
+    <Box p={4} borderRadius="md" boxShadow="md" bg="white">
+      <TableContainer borderRadius="md" overflow="hidden">
         <Table variant="simple">
-          <TableCaption textAlign="start" borderBottom="1px solid lightgrey" >
-            <Flex gap="1" >
-            <Link to="/exercise/myexercise">
-              <Text fontSize="15px" 
-              fontWeight='bold'
-              color="#0072BF">
-                Add Task
-              </Text>
+          {/* Table Caption */}
+          <TableCaption textAlign="start" borderBottom="1px solid lightgrey">
+            <Flex gap="2">
+              <Link to="/exercise/myexercise">
+                <Text
+                  fontSize="15px"
+                  fontWeight="bold"
+                  color="#0072BF"
+                  cursor="pointer"
+                  _hover={{ textDecoration: "underline" }}
+                >
+                  Add Task
+                </Text>
               </Link>
-              <Text fontSize="13px" color="#0072BF">
-                |
-              </Text>
-              <Text fontSize="15px"
-              fontWeight='bold'
-              color="#0072BF">
+              <Text fontSize="13px" color="#0072BF">|</Text>
+              <Text
+                fontSize="15px"
+                fontWeight="bold"
+                color="#0072BF"
+                cursor="pointer"
+                _hover={{ textDecoration: "underline" }}
+              >
                 Quick Tools
               </Text>
             </Flex>
           </TableCaption>
+
+          {/* Table Header */}
           <Thead>
-            <Tr borderBottom="1px solid #e6e6e6">
+            <Tr bgGradient="linear(to-r, #00548F, #0074B7)">
               <Th
                 w="60%"
                 fontSize="18px"
                 fontWeight="bold"
+                color="white"
                 textTransform="capitalize"
-                color="#00548F"
               >
                 Cardiovascular
               </Th>
-              <Th
-                background="#00548f"
-                textAlign="center"
-                color="#ffffff"
-                borderRight="2px solid white"
-              >
+              <Th color="white" textAlign="center" borderRight="2px solid white">
                 Minutes
               </Th>
-              <Th background="#00548f" color="#ffffff" isNumeric>
+              <Th color="white" textAlign="center" isNumeric>
                 Calories Burned
               </Th>
               <Th></Th>
             </Tr>
           </Thead>
+
+          {/* Table Body */}
           <Tbody>
-
-            {Exercisedata?.exercise?.map((e)=><Tr key={e._id}
-              borderBottom="1px solid #e6e6e6"
-              backgroundColor="#f6f6f6"
-              color="black"
-            >
-              <Td borderRight="2px solid white">{e.name}</Td>
-              <Td isNumeric borderRight="2px solid white"
-              textAlign={"center"}
+            {Exercisedata?.exercise?.map((e) => (
+              <Tr
+                key={e._id}
+                borderBottom="1px solid #e6e6e6"
+                backgroundColor="gray.100"
+                _hover={{ bg: "gray.200", transition: "0.2s" }}
               >
-              {e.min}
-              </Td>
-              <Td borderRight="2px solid white"
-              textAlign={"center"}>{e.calories}</Td>
-
-              <Td>
-                <Text fontWeight="extrabold" color="red" borderRadius="50%" 
-                onClick={()=>handleDelete(e._id,Exercisedata.date)}
-                >
-                  <AiFillStop />
-                </Text>
-              </Td>
-            </Tr>)
-}
-
-
-            
+                <Td borderRight="2px solid white">{e.name}</Td>
+                <Td textAlign="center" borderRight="2px solid white">
+                  {e.min}
+                </Td>
+                <Td textAlign="center" borderRight="2px solid white">
+                  {e.calories}
+                </Td>
+                <Td textAlign="center">
+                  <Text
+                    color="red.500"
+                    fontSize="1.5rem"
+                    cursor="pointer"
+                    _hover={{ transform: "scale(1.2)", transition: "0.2s" }}
+                    onClick={() => handleDelete(e._id, Exercisedata.date)}
+                  >
+                    <AiFillStop />
+                  </Text>
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </TableContainer>

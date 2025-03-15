@@ -1,128 +1,153 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Button, Grid, Heading, Text, Input, Flex, Divider, Progress } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { searchAllFoodDiary } from "../../api";
-import "./food.css";
 import FoodTable from "./FoodTable";
 import HeadDate from "./HeadDate";
 
 const FoodDiary = () => {
   const [data, setData] = useState([]);
-  const searchData = async() => {
+  const [waterCups, setWaterCups] = useState(0); 
+  const goal = 8;
+
+  const searchData = async () => {
     const userID = localStorage.getItem("fitUserID");
     const param = { userID: userID };
     const res = await searchAllFoodDiary(param);
-    setData(res.data)
+    setData(res.data);
     console.log(res.data);
   };
 
   useEffect(() => {
-    searchData()
-  }, [])
-  // foor diary component where user can add food to his plan
+    searchData();
+  }, []);
+
+  // Function to add water cups
+  const addWater = (cups) => {
+    setWaterCups((prev) => Math.min(goal, prev + cups)); // Prevent exceeding goal
+  };
+
   return (
-    <Box m='auto'   w={{lg:"90%",md:'90%',sm:'100%',base:'140%'}}>
-      <Box className="foodDiaryBox" p='2rem 1rem'  border={'1px solid lightgrey'} >
+    <Box m="auto" w={{ lg: "80%", md: "90%", sm: "100%" }} p={6} borderRadius="lg" bg="gray.50">
+      
+      {/* Header Section */}
+      <Box bg="white" p={4} boxShadow="md" borderRadius="md">
         <HeadDate />
-        <div className="breakfast">
-          <div>
-            <h2>Breakfast</h2>
-            <Link to="/food/addfood">
-              <p
-                onClick={() => {
-                  localStorage.setItem("time", "breakfast");
-                  searchData();
-                }}
-              >
-                Add Food
-              </p>
-            </Link>
-          </div>
-        </div>
-
-        <div className="lunch">
-          <h2>Lunch</h2>
-          <Link to="/food/addfood">
-            <p
-              onClick={() => {
-                localStorage.setItem("time", "lunch");
-              }}
-            >
-              Add Food
-            </p>
-          </Link>
-        </div>
-
-        <div className="dinner">
-          <h2>Dinner</h2>
-          <Link to="/food/addfood">
-            <p
-              onClick={() => {
-                localStorage.setItem("time", "dinner");
-              }}
-            >
-              Add Food
-            </p>
-          </Link>
-        </div>
-
-        <div className="snacks">
-          <h2>Snacks</h2>
-          <Link to="/food/addfood">
-            <p
-              onClick={() => {
-                localStorage.setItem("time", "snacks");
-              }}
-            >
-              Add Food
-            </p>
-          </Link>
-        </div>
-
-        <FoodTable data={data}/>
-
-        <h5>
-          When you're finished logging all foods and exercise for this day,
-          click here:
-        </h5>
-        <button className="btn">Complete This Entry</button>
       </Box>
-      <div className="lastsection">
-        <div className="waterBlock">
-          <h2>Water Consumption</h2>
-          <h4>Today's Water Total</h4>
-          <p>
-            Aim to drink at least 8 cups of water today. You can quick add
-            common sizes or enter a custom amount.
-            <span> Change Units</span>
-          </p>
 
-          <h4>Quick Add</h4>
-          <div className="cupData">
-            <p> + 1cup </p> <p> +2 cups </p> <p>+4 cups</p>
-          </div>
+      {/* Meal Sections */}
+      <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6} mt={6}>
+        {["Breakfast", "Lunch", "Dinner", "Snacks"].map((meal, index) => (
+          <Box
+            key={index}
+            p={4}
+            bg="white"
+            borderRadius="md"
+            boxShadow="sm"
+            _hover={{ boxShadow: "lg" }}
+            transition="0.3s"
+          >
+            <Flex justify="space-between" align="center">
+              <Heading size="md">{meal}</Heading>
+              <Link to="/food/addfood">
+                <Button
+                  size="sm"
+                  colorScheme="blue"
+                  onClick={() => localStorage.setItem("time", meal.toLowerCase())}
+                >
+                  + Add Food
+                </Button>
+              </Link>
+            </Flex>
+          </Box>
+        ))}
+      </Grid>
 
-          <h4>Add Custom</h4>
-          <div className="customInfo">
-            <input /> cups <button className="btnAdd">Add</button>
-          </div>
-        </div>
+      {/* Food Table */}
+      <Box mt={8} bg="white" p={4} boxShadow="md" borderRadius="md">
+        <FoodTable data={data} />
+      </Box>
 
-        <div className="imageinfo">
-          <h3> 5 cups</h3>
-          <div className="imageDiv">
-            <img
-              alt=""
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2k5bFGmN1u6J4qG251iDYrS74dT5SxBIO2A&usqp=CAU"
-            />
-          </div>
-        </div>
+      {/* Completion Button */}
+      <Box textAlign="center" mt={6}>
+        <Text fontSize="sm" color="gray.600">
+          When you're finished logging all foods and exercise for this day, click below:
+        </Text>
+        <Button colorScheme="green" size="lg" mt={3}>
+          Complete This Entry
+        </Button>
+      </Box>
 
-        <div className="notesection">
-          <h3>Today' Food Notes</h3>
-          <input />
-        </div>
-      </div>
+      {/* Additional Sections */}
+      <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6} mt={8}>
+
+        {/* Water Consumption Section */}
+        <Box p={5} bg="white" borderRadius="md" boxShadow="md">
+          <Flex justify="space-between" align="center" mb={3}>
+            <Heading size="md">💧 Water Tracker</Heading>
+            <Text fontSize="sm" color="gray.500">Goal: {goal} Cups</Text>
+          </Flex>
+
+          {/* Live Progress Bar */}
+          <Progress value={(waterCups / goal) * 100} size="sm" colorScheme="blue" borderRadius="full" />
+
+          {/* Visual Water Glasses */}
+          <Flex justify="center" mt={4} gap={2}>
+            {[...Array(goal)].map((_, index) => (
+              <Box
+                key={index}
+                w="30px"
+                h="50px"
+                borderRadius="5px"
+                bg={index < waterCups ? "blue.400" : "gray.200"}
+                border="2px solid blue.300"
+                transition="0.3s"
+              />
+            ))}
+          </Flex>
+
+          <Text fontSize="sm" color="gray.500" mt={2} textAlign="center">
+            {waterCups} Cups Drunk
+          </Text>
+
+          <Divider my={4} />
+
+          {/* Quick Add Section */}
+          <Text fontWeight="bold">Quick Add:</Text>
+          <Flex mt={2} gap={2}>
+            {["+1 cup", "+2 cups", "+4 cups"].map((cup, i) => {
+              const amount = parseInt(cup.replace("+", "").replace(" cups", ""));
+              return (
+                <Button key={i} size="sm" variant="outline" colorScheme="blue" _hover={{ bg: "blue.50" }} onClick={() => addWater(amount)}>
+                  {cup}
+                </Button>
+              );
+            })}
+          </Flex>
+
+          {/* Custom Input Section */}
+          <Text fontWeight="bold" mt={4}>Custom Add:</Text>
+          <Flex mt={2} gap={2}>
+            <Input id="customWater" placeholder="Enter cups" size="sm" borderColor="blue.300" type="number" min="1" max="8" />
+            <Button
+              size="sm"
+              colorScheme="blue"
+              onClick={() => {
+                const inputValue = document.getElementById("customWater").value;
+                if (inputValue) addWater(parseInt(inputValue));
+              }}
+            >
+              Add
+            </Button>
+          </Flex>
+        </Box>
+
+        {/* Notes Section */}
+        <Box p={5} bg="white" borderRadius="md" boxShadow="sm">
+          <Heading size="md">Today's Food Notes</Heading>
+          <Input placeholder="Write notes here..." mt={3} />
+        </Box>
+      </Grid>
     </Box>
   );
 };

@@ -20,6 +20,6 @@ const UserSchema = new mongoose.Schema({
     
 });
 
-const UserModel = mongoose.model("fitnesspal", UserSchema)
+const UserModel = mongoose.model("DiabetesDiet", UserSchema)
 
 module.exports = UserModel;

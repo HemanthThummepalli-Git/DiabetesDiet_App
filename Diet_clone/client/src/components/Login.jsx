@@ -1,30 +1,30 @@
-import { Box, Button, Center, Input, Text, useToast } from "@chakra-ui/react";
+import { 
+  Box, Button, Center, Input, Text, useToast 
+} from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { GrFacebook } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const toast = useToast();
 
   const onLogin = async () => {
-    const data = { email: email, password: password };
+    const data = { email, password };
 
     try {
-      const res = await axios.post(
-        "https://fierce-hen-pajamas.cyclic.app/login",
-        data
-      );
+      const res = await axios.post("http://localhost:5000/login", data);
       console.log(res.data);
-      if (res.data.message != "Invalid Credentials") {
+      
+      if (res.data.message !== "Invalid Credentials") {
         localStorage.setItem("fitUserID", res.data.message.data.id);
         let user = JSON.parse(localStorage.getItem("user"));
+        
         toast({
-          title: "Logged In successfully",
-          description: `Hey Welcome ${" "}  ${user.username}`,
+          title: "Logged In Successfully 🎉",
+          description: `Welcome back, ${user?.username || "User"}!`,
           status: "success",
           duration: 2000,
           position: "top",
@@ -34,8 +34,8 @@ const Login = () => {
         navigate("/home");
       } else {
         toast({
-          title: "Invalid Credentials",
-          description: "please try again",
+          title: "Invalid Credentials ❌",
+          description: "Please check your email or password",
           status: "error",
           duration: 2000,
           position: "top",
@@ -44,8 +44,8 @@ const Login = () => {
       }
     } catch (err) {
       toast({
-        title: "Something went wrong",
-        description: "please try again",
+        title: "Oops! Something went wrong 😕",
+        description: "Please try again later.",
         status: "error",
         duration: 2000,
         position: "top",
@@ -53,11 +53,12 @@ const Login = () => {
       });
     }
   };
+
   useEffect(() => {
     toast({
-      title: "Welcome",
-      description: "Please SignUp if you don't have Account.",
-      status: "success",
+      title: "Welcome Back! 😊",
+      description: "Sign up if you don't have an account.",
+      status: "info",
       duration: 2000,
       position: "top",
       isClosable: true,
@@ -65,82 +66,73 @@ const Login = () => {
   }, []);
 
   return (
-    <div>
-      <Center height={"100vh"}>
-        <Box width={"fit-content"} height={"fit-content"}>
-          <Center>
-            <Box
-              boxShadow={"rgba(0, 0, 0, 0.35) 0px 5px 15px;"}
-              padding={"40px 40px"}
-              alignContent={"center"}
-            >
-              <Center>
-                <Text fontSize={"20px"} fontWeight={"bold"} marginBottom="5">
-                  Member Login
-                </Text>
-              </Center>
-              <Box>
-                <Input
-                  onChange={(e) => setemail(e.target.value)}
-                  marginBottom="2"
-                  placeholder="Email Address"
-                />
-                <Input
-                  onChange={(e) => setpassword(e.target.value)}
-                  placeholder="Password"
-                />
+    <Center height="70vh" >
+      <Box 
+        bg="white" 
+        p={8} 
+        borderRadius="md" 
+        boxShadow="lg"
+        width="450px"
+        textAlign="center"
+      >
+        <Text fontSize="2xl" fontWeight="bold" color="blue.600" mb={4}>
+          Member Login
+        </Text>
 
-                <Text
-                  style={{ cursor: "pointer" }}
-                  marginBottom="5"
-                  textAlign={"left"}
-                  color={"blue"}
-                >
-                  Forgot Password?
-                </Text>
-              </Box>
-              <Box>
-                <Button
-                  onClick={onLogin}
-                  marginBottom="2"
-                  colorScheme={"blue"}
-                  w={"100%"}
-                >
-                  LOG IN
-                </Button>
-                <Text marginBottom="2" textAlign={"center"}>
-                  or
-                </Text>
-                <Button
-                  w={"100%"}
-                  colorScheme="facebook"
-                  leftIcon={<GrFacebook />}
-                >
-                  Facebook
-                </Button>
-              </Box>
-            </Box>
-          </Center>
-          <Text
-            color="#A0A0A0"
-            my="10px"
-            align="center"
-            fontSize="md"
-            fontWeight={"semibold"}
-          >
-            Not a member?{" "}
-            <Text
-              as="span"
-              fontSize={"1.2rem"}
-              fontWeight="bold"
-              style={{ color: "blue", cursor: "pointer" }}
-            >
-              <Link to={"/signup1"}>Sign Up now</Link>
+        <Input
+          placeholder="Email Address"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          mb={3}
+          borderRadius="md"
+          focusBorderColor="blue.500"
+          _hover={{ borderColor: "blue.300" }}
+        />
+
+        <Input
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          mb={3}
+          borderRadius="md"
+          focusBorderColor="blue.500"
+          _hover={{ borderColor: "blue.300" }}
+        />
+
+        <Text 
+          fontSize="sm" 
+          color="blue.500" 
+          textAlign="right" 
+          cursor="pointer"
+          mb={4}
+          _hover={{ textDecoration: "underline" }}
+        >
+          Forgot Password?
+        </Text>
+
+        <Button 
+          colorScheme="blue"
+          w="100%"
+          borderRadius="md"
+          mb={4}
+          onClick={onLogin}
+          _hover={{ bg: "blue.600" }}
+        >
+          LOG IN
+        </Button>
+
+        <Text fontSize="sm" color="gray.500">
+          Not a member?{" "}
+          <Link to="/signup1">
+            <Text as="span" fontWeight="bold" color="blue.500" cursor="pointer" _hover={{ textDecoration: "underline" }}>
+              Sign Up Now
             </Text>
-          </Text>
-        </Box>
-      </Center>
-    </div>
+          </Link>
+        </Text>
+      </Box>
+    </Center>
   );
 };
 

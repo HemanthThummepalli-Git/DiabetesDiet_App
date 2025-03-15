@@ -18,7 +18,7 @@ export default function Navbar2(auth) {
       {auth ? (
         <div className={StyleHome.nav2div}>
           <div className={StyleHome.nav2logodiv}>
-            <h4 className={StyleHome.nav2logo}>MyFitnessFriend</h4>
+            <h4 className={StyleHome.nav2logo}>DiaBite</h4>
           </div>
           <div className={StyleHome.nav2info}>
             <p className={StyleHome.nav2ppp}>Hi,</p>{" "}
